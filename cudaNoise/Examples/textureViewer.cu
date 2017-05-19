@@ -10,7 +10,7 @@
 #include <iostream>
 #include <time.h>
 
-#include "cudanoise.cuh"
+#include "../cudanoise.cuh"
 
 #define DIM 512
 
@@ -20,7 +20,7 @@ dim3 threads(16, 16);
 
 float zoom = 16.0f;
 int genSeed = 0;
-int selectedNoise = 0;
+int selectedNoise = 9;
 
 GLuint bufferObj;
 cudaGraphicsResource *resource;
@@ -83,6 +83,9 @@ __global__ void kernel(uchar4 *ptr, float zoomFactor, int samples, int seed, int
 			break;
 		case(8):
 			val = cudaNoise::spots(ditheredPos, 1.0f, seed, 0.1f, 0, 8, 1.0f, cudaNoise::SHAPE_STEP);
+			break;
+		case(9):
+			val = cudaNoise::recursiveTurbulence(ditheredPos, 1.0f, seed, 16, 2.0f, 0.5f);
 			break;
 		}
 		
@@ -178,7 +181,7 @@ static void key_func(unsigned char key, int x, int y)
 	// Dot to get the next noise function
 	case 46:
 		std::cout << "KEA" << std::endl;
-		selectedNoise = (selectedNoise + 1) % 9;
+		selectedNoise = (selectedNoise + 1) % 10;
 		redrawTexture();
 		break;
 	// Spacebar to get new seed
