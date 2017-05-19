@@ -688,19 +688,25 @@ __device__  float repeaterTurbulence(float3 pos, float scaleIn, float scaleOut, 
 
 // Recursive turbulence
 // Experimental function
-__device__ float recursiveTurbulence(float3 pos, float scale, int seed, int n, float lacunarity, float decay)
+__device__ float recursiveTurbulence(float3 pos, float origScale, int seed, int n, float lacunarity, float decay, float strength)
 {
 	float amp = 1.0f;
+	float scale = origScale;
 
+	// Loop to perturb the position vector
 	for (int i = 0; i < n; i++)
 	{
-		pos.x += perlinNoise(pos, scale, seed * i);
+		float randOffset = randomFloat(seed * i * 82371);
+
+		pos.x += perlinNoise(pos, scale, seed * i * 2374 + 83274) * amp * strength + randOffset;
+		pos.y += perlinNoise(pos, scale, seed * i * 8273 + 1732) * amp * strength + randOffset;
+		pos.z += perlinNoise(pos, scale, seed * i * 10925 + 7234) * amp * strength + randOffset;
 		scale *= lacunarity;
 		amp *= decay;
 	}
 
-	// Final function call
-	return perlinNoise(pos, scale, seed + 18347746);
+	// Final function call 
+	return perlinNoise(pos, origScale, seed + 18347746);
 }
 
 } // namespace

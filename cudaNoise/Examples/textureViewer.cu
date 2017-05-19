@@ -85,7 +85,7 @@ __global__ void kernel(uchar4 *ptr, float zoomFactor, int samples, int seed, int
 			val = cudaNoise::spots(ditheredPos, 1.0f, seed, 0.1f, 0, 8, 1.0f, cudaNoise::SHAPE_STEP);
 			break;
 		case(9):
-			val = cudaNoise::recursiveTurbulence(ditheredPos, 1.0f, seed, 16, 2.0f, 0.5f);
+			val = cudaNoise::recursiveTurbulence(ditheredPos, 1.0f, seed, 16, 1.5f, 0.5f, 0.5f);
 			break;
 		}
 		
